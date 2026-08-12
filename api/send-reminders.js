@@ -1,4 +1,5 @@
 // Vercel cron endpoint: sends due reminders through Telegram and marks them as sent.
+// Cron schedule is configured in vercel.json.
 export default async function handler(req, res) {
     if (req.method !== "GET") {
         return res.status(405).json({ error: "Method not allowed" });
