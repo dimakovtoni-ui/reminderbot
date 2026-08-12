@@ -1,5 +1,4 @@
-// Vercel cron endpoint: sends due reminders through Telegram and marks them as sent.
-// Cron schedule is configured in vercel.json.
+// External scheduler endpoint: sends due reminders through Telegram and marks them as sent.
 export default async function handler(req, res) {
     if (req.method !== "GET") {
         return res.status(405).json({ error: "Method not allowed" });
@@ -21,7 +20,10 @@ export default async function handler(req, res) {
     }
 
     const authHeader = req.headers.authorization || "";
-    if (authHeader !== `Bearer ${cronSecret}`) {
+    const expectedBearer = `Bearer ${cronSecret}`;
+    const expectedBasic = `Basic ${Buffer.from(`cron:${cronSecret}`).toString("base64")}`;
+
+    if (authHeader !== expectedBearer && authHeader !== expectedBasic) {
         return res.status(401).json({ error: "Unauthorized" });
     }
 
@@ -113,5 +115,3 @@ export default async function handler(req, res) {
         return res.status(500).json({ error: "Server error" });
     }
 }
-
-// deploy trigger after reconnect
