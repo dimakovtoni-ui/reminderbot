@@ -12,21 +12,64 @@
 
 <body>
 
-    <div class="container">
+<div class="container">
 
-        <h1>🔔 Напоминания</h1>
+    <h1>Напоминания 🔔</h1>
 
-        <div id="reminders">
-            <p class="empty">У тебя пока нет напоминаний</p>
-        </div>
-
-        <button id="addReminder">
-            + Создать напоминание
+    <div class="tabs">
+        <button class="tab active" id="createTab">
+            + Создать
         </button>
+
+        <button class="tab" id="myRemindersTab">
+            Мои напоминания
+        </button>
+    </div>
+
+    <!-- Создание напоминания -->
+    <div id="createPage" class="page">
+
+        <div class="reminder-form">
+
+            <label>Что напомнить?</label>
+            <input
+                type="text"
+                id="reminderText"
+                placeholder="Например, сделать домашку"
+            >
+
+            <label>Дата</label>
+            <input
+                type="date"
+                id="reminderDate"
+            >
+
+            <label>Время</label>
+            <input
+                type="time"
+                id="reminderTime"
+            >
+
+            <button id="saveReminder">
+                Создать напоминание
+            </button>
+
+        </div>
 
     </div>
 
-    <script src="app.js"></script>
+
+    <!-- Мои напоминания -->
+    <div id="remindersPage" class="page hidden">
+
+        <div id="remindersList">
+        </div>
+
+    </div>
+
+</div>
+
+<script src="app.js"></script>
 
 </body>
 </html>
