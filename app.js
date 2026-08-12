@@ -7,20 +7,12 @@ if (tg) {
 
 const createTab = document.getElementById("createTab");
 const myRemindersTab = document.getElementById("myRemindersTab");
-
 const createPage = document.getElementById("createPage");
 const remindersPage = document.getElementById("remindersPage");
-
 const saveButton = document.getElementById("saveReminder");
-
-
-// --------------------
-// ВКЛАДКИ
-// --------------------
 
 createTab.addEventListener("click", showCreatePage);
 myRemindersTab.addEventListener("click", showRemindersPage);
-
 
 function showCreatePage() {
     createPage.classList.remove("hidden");
@@ -29,7 +21,6 @@ function showCreatePage() {
     createTab.classList.add("active");
     myRemindersTab.classList.remove("active");
 }
-
 
 function showRemindersPage() {
     createPage.classList.add("hidden");
@@ -41,12 +32,7 @@ function showRemindersPage() {
     renderReminders();
 }
 
-
-// --------------------
-// СОЗДАНИЕ
-// --------------------
-
-saveButton.addEventListener("click", () => {
+saveButton.addEventListener("click", async () => {
     const textInput = document.getElementById("reminderText");
     const dateInput = document.getElementById("reminderDate");
     const timeInput = document.getElementById("reminderTime");
@@ -60,37 +46,64 @@ saveButton.addEventListener("click", () => {
         return;
     }
 
-    const reminder = {
-        id: Date.now(),
-        text: text,
-        date: date,
-        time: time
-    };
+    const telegramId = tg?.initDataUnsafe?.user?.id;
 
-    const reminders = getReminders();
+    if (!telegramId) {
+        showMessage("Открой приложение через Telegram-бота");
+        return;
+    }
 
-    reminders.push(reminder);
+    const remindAt = new Date(`${date}T${time}:00`).toISOString();
 
-    localStorage.setItem(
-        "reminders",
-        JSON.stringify(reminders)
-    );
+    saveButton.disabled = true;
+    saveButton.textContent = "Сохраняю...";
 
-    // очищаем форму
-    textInput.value = "";
-    dateInput.value = "";
-    timeInput.value = "";
+    try {
+        const response = await fetch("/api/create-reminder", {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json"
+            },
+            body: JSON.stringify({
+                telegram_id: telegramId,
+                text,
+                remind_at: remindAt
+            })
+        });
 
-    showMessage("Напоминание создано 🔔");
+        const data = await response.json();
 
-    // сразу переходим в список
-    showRemindersPage();
+        if (!response.ok) {
+            console.error("Ошибка создания напоминания:", data);
+            showMessage(data?.error || "Не удалось сохранить напоминание");
+            return;
+        }
+
+        const reminder = {
+            id: data?.reminder?.id ?? Date.now(),
+            text,
+            date,
+            time
+        };
+
+        const reminders = getReminders();
+        reminders.push(reminder);
+        localStorage.setItem("reminders", JSON.stringify(reminders));
+
+        textInput.value = "";
+        dateInput.value = "";
+        timeInput.value = "";
+
+        showMessage("Напоминание создано 🔔");
+        showRemindersPage();
+    } catch (error) {
+        console.error("Ошибка сети:", error);
+        showMessage("Не удалось связаться с сервером");
+    } finally {
+        saveButton.disabled = false;
+        saveButton.textContent = "Создать напоминание";
+    }
 });
-
-
-// --------------------
-// ПОЛУЧЕНИЕ ИЗ ПАМЯТИ
-// --------------------
 
 function getReminders() {
     try {
@@ -101,156 +114,74 @@ function getReminders() {
         }
 
         const reminders = JSON.parse(saved);
-
-        return Array.isArray(reminders)
-            ? reminders
-            : [];
-
+        return Array.isArray(reminders) ? reminders : [];
     } catch (error) {
         console.error("Ошибка чтения напоминаний:", error);
         return [];
     }
 }
 
-
-// --------------------
-// ПОКАЗ СПИСКА
-// --------------------
-
 function renderReminders() {
-    const remindersList =
-        document.getElementById("remindersList");
-
+    const remindersList = document.getElementById("remindersList");
     const reminders = getReminders();
 
     if (reminders.length === 0) {
         remindersList.innerHTML = `
             <div class="empty-state">
                 <div class="empty-icon">🔔</div>
-
                 <h2>Напоминаний пока нет</h2>
-
-                <p>
-                    Создай первое напоминание,
-                    и оно появится здесь
-                </p>
+                <p>Создай первое напоминание, и оно появится здесь</p>
             </div>
         `;
-
         return;
     }
 
     reminders.sort((a, b) => {
-        const first =
-            new Date(`${a.date}T${a.time}`);
-
-        const second =
-            new Date(`${b.date}T${b.time}`);
-
+        const first = new Date(`${a.date}T${a.time}`);
+        const second = new Date(`${b.date}T${b.time}`);
         return first - second;
     });
 
-    remindersList.innerHTML =
-        reminders.map(reminder => `
-            <div class="reminder-card">
-
-                <div class="reminder-info">
-
-                    <div class="reminder-text">
-                        ${escapeHtml(reminder.text)}
-                    </div>
-
-                    <div class="reminder-date">
-                        ${formatDate(reminder.date)}
-                        ·
-                        ${reminder.time}
-                    </div>
-
-                </div>
-
-                <button
-                    class="delete-button"
-                    data-id="${reminder.id}"
-                >
-                    ×
-                </button>
-
+    remindersList.innerHTML = reminders.map(reminder => `
+        <div class="reminder-card">
+            <div class="reminder-info">
+                <div class="reminder-text">${escapeHtml(reminder.text)}</div>
+                <div class="reminder-date">${formatDate(reminder.date)} · ${reminder.time}</div>
             </div>
-        `).join("");
+            <button class="delete-button" data-id="${reminder.id}">×</button>
+        </div>
+    `).join("");
 
-    document
-        .querySelectorAll(".delete-button")
-        .forEach(button => {
-
-            button.addEventListener("click", () => {
-
-                const id =
-                    Number(button.dataset.id);
-
-                deleteReminder(id);
-            });
-
+    document.querySelectorAll(".delete-button").forEach(button => {
+        button.addEventListener("click", () => {
+            const id = Number(button.dataset.id);
+            deleteReminder(id);
         });
+    });
 }
-
-
-// --------------------
-// УДАЛЕНИЕ
-// --------------------
 
 function deleteReminder(id) {
     let reminders = getReminders();
-
-    reminders =
-        reminders.filter(reminder =>
-            reminder.id !== id
-        );
-
-    localStorage.setItem(
-        "reminders",
-        JSON.stringify(reminders)
-    );
-
+    reminders = reminders.filter(reminder => reminder.id !== id);
+    localStorage.setItem("reminders", JSON.stringify(reminders));
     renderReminders();
 }
 
-
-// --------------------
-// ДАТА
-// --------------------
-
 function formatDate(dateString) {
-    const date =
-        new Date(dateString + "T00:00:00");
+    const date = new Date(dateString + "T00:00:00");
 
-    return date.toLocaleDateString(
-        "ru-RU",
-        {
-            day: "numeric",
-            month: "long",
-            year: "numeric"
-        }
-    );
+    return date.toLocaleDateString("ru-RU", {
+        day: "numeric",
+        month: "long",
+        year: "numeric"
+    });
 }
-
-
-// --------------------
-// БЕЗОПАСНЫЙ ВЫВОД ТЕКСТА
-// --------------------
 
 function escapeHtml(text) {
-    const div =
-        document.createElement("div");
-
+    const div = document.createElement("div");
     div.textContent = text;
-
     return div.innerHTML;
 }
-
-
-// --------------------
-// СООБЩЕНИЯ
-// --------------------
 
 function showMessage(message) {
     if (tg && typeof tg.showAlert === "function") {
