@@ -7,24 +7,14 @@ export default async function handler(req, res) {
     const supabaseUrl = process.env.SUPABASE_URL;
     const supabaseKey = process.env.SUPABASE_SERVICE_ROLE_KEY;
     const botToken = process.env.TELEGRAM_BOT_TOKEN;
-    const cronSecret = process.env.CRON_SECRET;
 
-    if (!supabaseUrl || !supabaseKey || !botToken || !cronSecret) {
+    if (!supabaseUrl || !supabaseKey || !botToken) {
         return res.status(500).json({
             error: "Server is not fully configured",
             hasSupabaseUrl: Boolean(supabaseUrl),
             hasSupabaseServiceRoleKey: Boolean(supabaseKey),
-            hasTelegramBotToken: Boolean(botToken),
-            hasCronSecret: Boolean(cronSecret)
+            hasTelegramBotToken: Boolean(botToken)
         });
-    }
-
-    const authHeader = req.headers.authorization || "";
-    const expectedBearer = `Bearer ${cronSecret}`;
-    const expectedBasic = `Basic ${Buffer.from(`cron:${cronSecret}`).toString("base64")}`;
-
-    if (authHeader !== expectedBearer && authHeader !== expectedBasic) {
-        return res.status(401).json({ error: "Unauthorized" });
     }
 
     try {
