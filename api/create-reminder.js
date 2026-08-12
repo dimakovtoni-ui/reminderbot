@@ -1,13 +1,13 @@
 // Vercel serverless API for saving reminders to Supabase
 export default async function handler(req, res) {
     const supabaseUrl = process.env.SUPABASE_URL;
-    const supabaseKey = process.env.SUPABASE_ANON_KEY;
+    const supabaseKey = process.env.SUPABASE_SERVICE_ROLE_KEY;
 
     if (req.method === "GET") {
         return res.status(200).json({
             ok: true,
             hasSupabaseUrl: Boolean(supabaseUrl),
-            hasSupabaseAnonKey: Boolean(supabaseKey)
+            hasSupabaseServiceRoleKey: Boolean(supabaseKey)
         });
     }
 
@@ -26,7 +26,7 @@ export default async function handler(req, res) {
             return res.status(500).json({
                 error: "Supabase не настроен на сервере",
                 hasSupabaseUrl: Boolean(supabaseUrl),
-                hasSupabaseAnonKey: Boolean(supabaseKey)
+                hasSupabaseServiceRoleKey: Boolean(supabaseKey)
             });
         }
 
