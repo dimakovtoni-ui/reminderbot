@@ -1,5 +1,16 @@
 // Vercel serverless API for saving reminders to Supabase
 export default async function handler(req, res) {
+    const supabaseUrl = process.env.SUPABASE_URL;
+    const supabaseKey = process.env.SUPABASE_ANON_KEY;
+
+    if (req.method === "GET") {
+        return res.status(200).json({
+            ok: true,
+            hasSupabaseUrl: Boolean(supabaseUrl),
+            hasSupabaseAnonKey: Boolean(supabaseKey)
+        });
+    }
+
     if (req.method !== "POST") {
         return res.status(405).json({ error: "Method not allowed" });
     }
@@ -11,11 +22,12 @@ export default async function handler(req, res) {
             return res.status(400).json({ error: "Не хватает данных" });
         }
 
-        const supabaseUrl = process.env.SUPABASE_URL;
-        const supabaseKey = process.env.SUPABASE_ANON_KEY;
-
         if (!supabaseUrl || !supabaseKey) {
-            return res.status(500).json({ error: "Supabase не настроен на сервере" });
+            return res.status(500).json({
+                error: "Supabase не настроен на сервере",
+                hasSupabaseUrl: Boolean(supabaseUrl),
+                hasSupabaseAnonKey: Boolean(supabaseKey)
+            });
         }
 
         const response = await fetch(`${supabaseUrl}/rest/v1/reminders`, {
