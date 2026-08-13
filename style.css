@@ -58,7 +58,7 @@ body {
 }
 
 .hero {
-    padding: 18px 6px 20px;
+    padding: 18px 6px 16px;
 }
 
 .heart-badge {
@@ -97,6 +97,87 @@ h1 {
     color: var(--muted);
     font-size: 15px;
     line-height: 1.5;
+}
+
+.memories {
+    margin: 4px 0 18px;
+    padding: 14px;
+    border: 1px solid rgba(255, 111, 174, 0.12);
+    border-radius: 24px;
+    background: rgba(255, 255, 255, 0.58);
+    box-shadow: 0 12px 34px rgba(232, 79, 148, 0.1);
+    backdrop-filter: blur(14px);
+}
+
+.memories-title {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 1px 2px 10px;
+    color: var(--pink-dark);
+    font-size: 12px;
+    font-weight: 800;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+}
+
+.tiny-heart {
+    font-size: 20px;
+    line-height: 1;
+}
+
+.photo-collage {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    grid-auto-rows: 92px;
+    gap: 7px;
+}
+
+.photo {
+    position: relative;
+    min-width: 0;
+    margin: 0;
+    overflow: hidden;
+    border-radius: 16px;
+    background: var(--pink-soft);
+    box-shadow: 0 7px 18px rgba(98, 55, 76, 0.08);
+}
+
+.photo-main {
+    grid-column: span 2;
+    grid-row: span 2;
+}
+
+.photo-tall {
+    grid-row: span 2;
+}
+
+.photo img {
+    width: 100%;
+    height: 100%;
+    display: block;
+    object-fit: cover;
+    transition: transform 0.35s ease;
+}
+
+.photo-main img {
+    object-position: center 38%;
+}
+
+.photo:nth-child(2) img {
+    object-position: center 42%;
+}
+
+.photo:nth-child(5) img {
+    object-position: center 34%;
+}
+
+.photo:nth-child(6) img {
+    object-position: center 52%;
+}
+
+.photo:active img {
+    transform: scale(1.03);
 }
 
 .tabs {
@@ -316,5 +397,9 @@ h1 {
 
     .card {
         padding: 17px;
+    }
+
+    .photo-collage {
+        grid-auto-rows: 82px;
     }
 }
