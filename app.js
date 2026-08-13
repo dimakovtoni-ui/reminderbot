@@ -105,6 +105,21 @@ saveButton.addEventListener("click", async () => {
     }
 });
 
+function cleanupExpiredReminders(reminders) {
+    const now = Date.now();
+
+    const activeReminders = reminders.filter(reminder => {
+        const reminderTime = new Date(`${reminder.date}T${reminder.time}:00`).getTime();
+        return Number.isFinite(reminderTime) && reminderTime > now;
+    });
+
+    if (activeReminders.length !== reminders.length) {
+        localStorage.setItem("reminders", JSON.stringify(activeReminders));
+    }
+
+    return activeReminders;
+}
+
 function getReminders() {
     try {
         const saved = localStorage.getItem("reminders");
@@ -114,7 +129,12 @@ function getReminders() {
         }
 
         const reminders = JSON.parse(saved);
-        return Array.isArray(reminders) ? reminders : [];
+
+        if (!Array.isArray(reminders)) {
+            return [];
+        }
+
+        return cleanupExpiredReminders(reminders);
     } catch (error) {
         console.error("Ошибка чтения напоминаний:", error);
         return [];
@@ -190,3 +210,11 @@ function showMessage(message) {
         alert(message);
     }
 }
+
+setInterval(() => {
+    if (!remindersPage.classList.contains("hidden")) {
+        renderReminders();
+    } else {
+        getReminders();
+    }
+}, 15000);
