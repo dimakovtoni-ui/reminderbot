@@ -94,14 +94,14 @@ saveButton.addEventListener("click", async () => {
         dateInput.value = "";
         timeInput.value = "";
 
-        showMessage("Напоминание создано 🔔");
+        showMessage("Умница, солнышко, напоминание скоро придет тебе ❤️");
         showRemindersPage();
     } catch (error) {
         console.error("Ошибка сети:", error);
         showMessage("Не удалось связаться с сервером");
     } finally {
         saveButton.disabled = false;
-        saveButton.textContent = "Создать напоминание";
+        saveButton.textContent = "Создать напоминание ♥";
     }
 });
 
@@ -128,7 +128,7 @@ function renderReminders() {
     if (reminders.length === 0) {
         remindersList.innerHTML = `
             <div class="empty-state">
-                <div class="empty-icon">🔔</div>
+                <div class="empty-icon">💗</div>
                 <h2>Напоминаний пока нет</h2>
                 <p>Создай первое напоминание, и оно появится здесь</p>
             </div>
@@ -148,7 +148,7 @@ function renderReminders() {
                 <div class="reminder-text">${escapeHtml(reminder.text)}</div>
                 <div class="reminder-date">${formatDate(reminder.date)} · ${reminder.time}</div>
             </div>
-            <button class="delete-button" data-id="${reminder.id}">×</button>
+            <button class="delete-button" data-id="${reminder.id}" aria-label="Удалить напоминание">×</button>
         </div>
     `).join("");
 
