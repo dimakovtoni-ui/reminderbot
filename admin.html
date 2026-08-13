@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="theme-color" content="#ff6fae">
+    <title>Админ — рассылка</title>
+    <link rel="stylesheet" href="admin.css">
+</head>
+<body>
+<main class="admin-shell">
+    <section class="admin-card">
+        <div class="admin-badge">♥</div>
+        <p class="eyebrow">formylove admin</p>
+        <h1>Рассылка</h1>
+        <p class="subtitle">Сообщение получат все пользователи, которые когда-либо создавали напоминание.</p>
+
+        <label for="adminSecret">Пароль</label>
+        <input id="adminSecret" type="password" placeholder="Пароль администратора" autocomplete="current-password">
+
+        <label for="broadcastText">Сообщение</label>
+        <textarea id="broadcastText" rows="7" maxlength="3500" placeholder="Напиши сообщение для всех пользователей…"></textarea>
+        <div class="counter"><span id="charCount">0</span>/3500</div>
+
+        <button id="sendBroadcast">Отправить всем ♥</button>
+        <p class="hint">Перед отправкой проверь текст — рассылку нельзя отменить после запуска.</p>
+
+        <div id="result" class="result hidden"></div>
+    </section>
+</main>
+<script src="admin.js"></script>
+</body>
+</html>
