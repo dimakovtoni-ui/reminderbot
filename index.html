@@ -3,6 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="theme-color" content="#ff6fae">
 
     <title>Напоминания</title>
 
@@ -12,9 +13,17 @@
 
 <body>
 
-<div class="container">
+<div class="background-decoration decoration-one"></div>
+<div class="background-decoration decoration-two"></div>
 
-    <h1>Напоминания 🔔</h1>
+<main class="container">
+
+    <header class="hero">
+        <div class="heart-badge">♥</div>
+        <p class="eyebrow">твои маленькие планы</p>
+        <h1>Привет, солнышко ❤️</h1>
+        <p class="hero-text">Запиши всё важное, а я помогу ничего не забыть.</p>
+    </header>
 
     <div class="tabs">
         <button class="tab active" id="createTab">
@@ -26,48 +35,52 @@
         </button>
     </div>
 
-    <!-- Создание напоминания -->
-    <div id="createPage" class="page">
+    <section id="createPage" class="page card">
+        <div class="section-heading">
+            <h2>Новое напоминание</h2>
+            <span>♡</span>
+        </div>
 
         <div class="reminder-form">
-
-            <label>Что напомнить?</label>
+            <label for="reminderText">Что напомнить?</label>
             <input
                 type="text"
                 id="reminderText"
-                placeholder="Например, сделать домашку"
+                placeholder="Например, позвонить маме"
+                autocomplete="off"
             >
 
-            <label>Дата</label>
-            <input
-                type="date"
-                id="reminderDate"
-            >
+            <div class="date-time-grid">
+                <div class="field-group">
+                    <label for="reminderDate">Дата</label>
+                    <input type="date" id="reminderDate">
+                </div>
 
-            <label>Время</label>
-            <input
-                type="time"
-                id="reminderTime"
-            >
+                <div class="field-group">
+                    <label for="reminderTime">Время</label>
+                    <input type="time" id="reminderTime">
+                </div>
+            </div>
 
             <button id="saveReminder">
-                Создать напоминание
+                Создать напоминание ♥
             </button>
+        </div>
+    </section>
 
+    <section id="remindersPage" class="page hidden">
+        <div class="section-heading reminders-heading">
+            <div>
+                <p class="eyebrow">всё под контролем</p>
+                <h2>Мои напоминания</h2>
+            </div>
+            <span>♥</span>
         </div>
 
-    </div>
+        <div id="remindersList"></div>
+    </section>
 
-
-    <!-- Мои напоминания -->
-    <div id="remindersPage" class="page hidden">
-
-        <div id="remindersList">
-        </div>
-
-    </div>
-
-</div>
+</main>
 
 <script src="app.js"></script>
 
