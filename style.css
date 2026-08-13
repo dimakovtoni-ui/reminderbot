@@ -1,83 +1,320 @@
+* {
+    box-sizing: border-box;
+}
+
+:root {
+    --pink: #ff6fae;
+    --pink-dark: #e84f94;
+    --pink-soft: #ffe3ef;
+    --pink-pale: #fff5f9;
+    --text: #362932;
+    --muted: #8d7480;
+    --white: #ffffff;
+    --shadow: 0 16px 45px rgba(232, 79, 148, 0.14);
+}
+
 body {
     margin: 0;
+    min-height: 100vh;
     font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
-    background: var(--tg-theme-bg-color, #f5f5f5);
-    color: var(--tg-theme-text-color, #111);
+    background:
+        radial-gradient(circle at top left, rgba(255, 184, 214, 0.42), transparent 34%),
+        linear-gradient(180deg, #fff9fc 0%, #fff2f7 100%);
+    color: var(--text);
+    overflow-x: hidden;
+}
+
+.background-decoration {
+    position: fixed;
+    border-radius: 50%;
+    filter: blur(1px);
+    pointer-events: none;
+    z-index: 0;
+}
+
+.decoration-one {
+    width: 180px;
+    height: 180px;
+    top: -70px;
+    right: -65px;
+    background: rgba(255, 111, 174, 0.15);
+}
+
+.decoration-two {
+    width: 150px;
+    height: 150px;
+    bottom: 60px;
+    left: -75px;
+    background: rgba(255, 196, 219, 0.22);
 }
 
 .container {
-    max-width: 500px;
+    position: relative;
+    z-index: 1;
+    width: 100%;
+    max-width: 520px;
     margin: 0 auto;
-    padding: 20px;
+    padding: 24px 18px 36px;
+}
+
+.hero {
+    padding: 18px 6px 20px;
+}
+
+.heart-badge {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 44px;
+    height: 44px;
+    margin-bottom: 12px;
+    border-radius: 15px;
+    background: linear-gradient(135deg, var(--pink), #ff9fc8);
+    color: white;
+    font-size: 22px;
+    box-shadow: 0 10px 28px rgba(255, 111, 174, 0.28);
+}
+
+.eyebrow {
+    margin: 0 0 5px;
+    color: var(--pink-dark);
+    font-size: 12px;
+    font-weight: 700;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
 }
 
 h1 {
-    font-size: 28px;
-    margin-bottom: 24px;
+    margin: 0;
+    font-size: clamp(30px, 8vw, 40px);
+    line-height: 1.06;
+    letter-spacing: -0.04em;
 }
 
-#reminders {
-    margin-bottom: 24px;
+.hero-text {
+    max-width: 360px;
+    margin: 12px 0 0;
+    color: var(--muted);
+    font-size: 15px;
+    line-height: 1.5;
 }
 
-.empty {
-    text-align: center;
-    color: var(--tg-theme-hint-color, #888);
-    margin-top: 60px;
+.tabs {
+    display: flex;
+    gap: 6px;
+    padding: 5px;
+    margin: 4px 0 16px;
+    border-radius: 18px;
+    background: rgba(255, 255, 255, 0.68);
+    border: 1px solid rgba(255, 111, 174, 0.12);
+    box-shadow: 0 8px 28px rgba(232, 79, 148, 0.08);
+    backdrop-filter: blur(14px);
 }
 
-#addReminder {
-    width: 100%;
-    border: none;
+.tab {
+    flex: 1;
+    min-height: 46px;
+    padding: 10px 12px;
+    border: 0;
     border-radius: 14px;
-    padding: 16px;
-    font-size: 17px;
-    font-weight: 600;
+    background: transparent;
+    color: var(--muted);
+    font-size: 14px;
+    font-weight: 700;
     cursor: pointer;
-
-    background: var(--tg-theme-button-color, #2aabee);
-    color: var(--tg-theme-button-text-color, #fff);
+    transition: 0.2s ease;
 }
 
-#addReminder:active {
-    transform: scale(0.98);
+.tab.active {
+    background: linear-gradient(135deg, var(--pink), #ff91c1);
+    color: #fff;
+    box-shadow: 0 8px 22px rgba(255, 111, 174, 0.25);
+}
+
+.card {
+    padding: 20px;
+    border-radius: 24px;
+    background: rgba(255, 255, 255, 0.82);
+    border: 1px solid rgba(255, 111, 174, 0.12);
+    box-shadow: var(--shadow);
+    backdrop-filter: blur(16px);
+}
+
+.section-heading {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 16px;
+    margin-bottom: 18px;
+}
+
+.section-heading h2 {
+    margin: 0;
+    font-size: 21px;
+    letter-spacing: -0.02em;
+}
+
+.section-heading > span {
+    color: var(--pink);
+    font-size: 24px;
+}
+
+.reminders-heading {
+    padding: 8px 4px 4px;
 }
 
 .reminder-form {
     display: flex;
     flex-direction: column;
-    gap: 12px;
+    gap: 10px;
+}
+
+.reminder-form label,
+.field-group label {
+    display: block;
+    margin: 3px 0 0;
+    color: #765d69;
+    font-size: 13px;
+    font-weight: 700;
 }
 
 .reminder-form input {
-    padding: 14px;
-    border: 1px solid #ddd;
-    border-radius: 12px;
-    font-size: 16px;
+    width: 100%;
+    padding: 15px 16px;
+    border: 1px solid #f2cfdf;
+    border-radius: 15px;
+    outline: none;
+    background: #fffafd;
+    color: var(--text);
+    font: inherit;
+    transition: border-color 0.2s ease, box-shadow 0.2s ease;
+}
+
+.reminder-form input:focus {
+    border-color: var(--pink);
+    box-shadow: 0 0 0 4px rgba(255, 111, 174, 0.12);
+}
+
+.date-time-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 10px;
+}
+
+.field-group {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
 }
 
 #saveReminder {
-    padding: 15px;
-    border: none;
-    border-radius: 12px;
+    width: 100%;
+    margin-top: 9px;
+    padding: 16px;
+    border: 0;
+    border-radius: 16px;
+    background: linear-gradient(135deg, var(--pink), #ff8dbf);
+    color: white;
     font-size: 16px;
-    font-weight: 600;
-    background: var(--tg-theme-button-color, #2aabee);
-    color: var(--tg-theme-button-text-color, #fff);
+    font-weight: 800;
+    cursor: pointer;
+    box-shadow: 0 12px 26px rgba(255, 111, 174, 0.26);
+    transition: transform 0.15s ease, opacity 0.2s ease;
+}
+
+#saveReminder:active {
+    transform: scale(0.985);
+}
+
+#saveReminder:disabled {
+    opacity: 0.65;
+}
+
+.hidden {
+    display: none;
 }
 
 .reminder-card {
-    padding: 16px;
-    border-radius: 14px;
-    background: var(--tg-theme-secondary-bg-color, #fff);
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 14px;
+    margin-bottom: 11px;
+    padding: 16px 16px 16px 17px;
+    border: 1px solid rgba(255, 111, 174, 0.13);
+    border-radius: 19px;
+    background: rgba(255, 255, 255, 0.86);
+    box-shadow: 0 9px 28px rgba(232, 79, 148, 0.08);
+}
+
+.reminder-info {
+    min-width: 0;
 }
 
 .reminder-text {
-    font-size: 18px;
-    font-weight: 600;
+    font-size: 16px;
+    font-weight: 750;
+    line-height: 1.35;
+    overflow-wrap: anywhere;
 }
 
 .reminder-date {
-    margin-top: 8px;
-    color: var(--tg-theme-hint-color, #888);
+    margin-top: 6px;
+    color: var(--pink-dark);
+    font-size: 13px;
+    font-weight: 650;
+}
+
+.delete-button {
+    flex: 0 0 auto;
+    width: 38px;
+    height: 38px;
+    border: 0;
+    border-radius: 50%;
+    background: var(--pink-soft);
+    color: var(--pink-dark);
+    font-size: 24px;
+    line-height: 1;
+    cursor: pointer;
+}
+
+.empty-state {
+    margin-top: 46px;
+    padding: 34px 22px;
+    border: 1px dashed #f0bdd3;
+    border-radius: 24px;
+    background: rgba(255,255,255,0.55);
+    text-align: center;
+}
+
+.empty-icon {
+    margin-bottom: 8px;
+    font-size: 38px;
+}
+
+.empty-state h2 {
+    margin: 0 0 8px;
+    font-size: 19px;
+}
+
+.empty-state p {
+    margin: 0;
+    color: var(--muted);
+    font-size: 14px;
+    line-height: 1.45;
+}
+
+@media (max-width: 380px) {
+    .date-time-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .container {
+        padding-left: 14px;
+        padding-right: 14px;
+    }
+
+    .card {
+        padding: 17px;
+    }
 }
